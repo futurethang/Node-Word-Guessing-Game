@@ -1,0 +1,11 @@
+{
+  "name": "word_guess_node",
+  "version": "1.0.0",
+  "description": "a node-based hang-man style game",
+  "main": "word_guess.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
