@@ -18,11 +18,17 @@ var inquirerGameStart = {
   name: 'gameStart'
 };
 
-var inquirerGameGuess = {
-  type: 'input',
-  message: 'guess a letter . . .',
-  name: 'userGuess'
-};
+function inquirerGameGuess() {
+  inquirer.prompt([
+    {
+      type: 'input',
+      message: 'guess a letter . . .',
+      name: 'userGuess'
+    }
+  ]).then(function (entry) {
+    console.log(entry.userGuess);
+  })
+}
 
 var inquirerGameOver = {
   type: 'confirm',
@@ -35,15 +41,26 @@ var inquirerGameOver = {
 function stringToArrayAndSetGameArrays(string) { // helper function, needs update to new variables
   console.log("string to array before: " + string);
   correctAnswer = string.toUpperCase().split("");
-  console.log(correctAnswer);
   for (let i = 0; i < correctAnswer.length; i++) {
-    gameWorkSpace.push("_");
+    if (correctAnswer[i] !== " ") {
+      gameWorkSpace.push("_");
+    } else {gameWorkSpace.push(" ");}
   };
+  console.log(correctAnswer);
+  console.log(arrayToString(gameWorkSpace));
 }
 
 function arrayToString(input) { // helper function
   return input = input.join("");
 }
+
+function alreadyCorrect(val) {
+  return gameWorkSpace.includes(val);
+};
+
+function alreadyWrong(val) {
+  return gameWorkSpace.includes(val);
+};
 //// END HELPER FUNCTIONS ////
 
 
@@ -60,6 +77,8 @@ function gameInitialization() { // inquirer function to begin the game
       guessesLeft = 13;
       stringToArrayAndSetGameArrays(randomPick);      
     }
+    }).then(function () {
+      inquirerGameGuess();
   })
 }
 
