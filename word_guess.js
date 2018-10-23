@@ -1,4 +1,5 @@
 var inquirer = require('inquirer');
+var colors = require('colors');
 
 var guessPhrase; // Can I auto generate from an API? Or just pull from answers array
 var guessesLeft = 13;
@@ -50,7 +51,7 @@ function inquirerGameGuess() {
     }
   }).then(function () {
     console.log(arrayToString(correctAnswer));
-    inquirerGameGuess();
+    gameOverState();
   });
 }
 
@@ -97,7 +98,7 @@ function correctGuess(indices, guess) {
     for (let i = 0; i < indices.length; i++) {
       gameWorkSpace[indices[i]] = guess;
     }
-    console.log(gameWorkSpace);
+    console.log("game work space: " + arrayToString(gameWorkSpace));
   }
 };
 
@@ -109,6 +110,16 @@ function incorrectGuess(val) {
     guessesLeft--;
     console.log("Wrong guesses: " + wrongGuesses + "   |   only " + guessesLeft + " guesses left . . .");
   }
+}
+
+function gameOverState() {
+  if (guessesLeft == 0) {
+    // failState();
+    console.log("game lose");
+  } else if (arrayToString(correctAnswer) == arrayToString(gameWorkSpace)) {
+    // successState();
+    console.log("game win");
+  } else { inquirerGameGuess() }
 }
 //// END HELPER FUNCTIONS ////
 
