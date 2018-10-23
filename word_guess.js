@@ -11,7 +11,7 @@ var answers = [
   "test test test"
 ]
 
-//// INQUIRER VARIABLES: ////
+//// INQUIRER VARIABLES AND FUNCTIONS: ////
 var inquirerGameStart = {
   type: 'confirm',
   message: 'Welcome to the word guess game! Are you ready to play?',
@@ -26,8 +26,32 @@ function inquirerGameGuess() {
       name: 'userGuess'
     }
   ]).then(function (entry) {
-    console.log(entry.userGuess);
-  })
+    var guess = entry.userGuess.toUpperCase();
+    if (!varifyThatGuessIsALetter(guess)) {
+      console.log("That is not a letter.")
+    }
+    else if (alreadyCorrect(guess)) {
+      console.log("that has already been guessed!");
+      inquirerGameGuess();
+    } else {
+      console.log("search for letter");
+      let analyzeIndices = [];
+      for (let i = 0; i < correctAnswer.length; i++) {
+        if (correctAnswer[i] === guess) {
+          analyzeIndices.push(i);
+        }
+      };
+      console.log("ANALYZE ENTRY: " + analyzeIndices);
+      if (analyzeIndices.length !== 0) {
+        correctGuess(analyzeIndices, guess);
+      } else {
+        incorrectGuess(guess);
+      }
+    }
+  }).then(function () {
+    console.log(arrayToString(correctAnswer));
+    inquirerGameGuess();
+  });
 }
 
 var inquirerGameOver = {
@@ -44,7 +68,7 @@ function stringToArrayAndSetGameArrays(string) { // helper function, needs updat
   for (let i = 0; i < correctAnswer.length; i++) {
     if (correctAnswer[i] !== " ") {
       gameWorkSpace.push("_");
-    } else {gameWorkSpace.push(" ");}
+    } else { gameWorkSpace.push(" "); }
   };
   console.log(correctAnswer);
   console.log(arrayToString(gameWorkSpace));
@@ -54,6 +78,10 @@ function arrayToString(input) { // helper function
   return input = input.join("");
 }
 
+function varifyThatGuessIsALetter(val) { // CHECK THE USER INPUT FOR ALPHA ENTRY, REJECT OTHER
+  return (val.length === 1 && val.match(/[a-z]/i));
+};
+
 function alreadyCorrect(val) {
   return gameWorkSpace.includes(val);
 };
@@ -61,6 +89,27 @@ function alreadyCorrect(val) {
 function alreadyWrong(val) {
   return gameWorkSpace.includes(val);
 };
+
+function correctGuess(indices, guess) {
+  if (alreadyCorrect(guess)) {
+    Console.log("You already guessed that one!")
+  } else {
+    for (let i = 0; i < indices.length; i++) {
+      gameWorkSpace[indices[i]] = guess;
+    }
+    console.log(gameWorkSpace);
+  }
+};
+
+function incorrectGuess(val) {
+  if (alreadyWrong(val)) {
+    console.log("That has already been guessed");
+  } else {
+    wrongGuesses.push(val);
+    guessesLeft--;
+    console.log("Wrong guesses: " + wrongGuesses + "   |   only " + guessesLeft + " guesses left . . .");
+  }
+}
 //// END HELPER FUNCTIONS ////
 
 
@@ -75,10 +124,10 @@ function gameInitialization() { // inquirer function to begin the game
       correctAnswer = [];
       gameWorkSpace = [];
       guessesLeft = 13;
-      stringToArrayAndSetGameArrays(randomPick);      
+      stringToArrayAndSetGameArrays(randomPick);
     }
-    }).then(function () {
-      inquirerGameGuess();
+  }).then(function () {
+    inquirerGameGuess();
   })
 }
 
