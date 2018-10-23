@@ -1,5 +1,12 @@
 var inquirer = require('inquirer');
-var colors = require('colors');
+var colors = require('colors/safe');
+
+colors.setTheme({
+  warning: ['red', 'underline'],
+  winner: ['cyan', 'bold'],
+  wrong: ['red', 'bold'],
+  correct: ['green', 'bold']
+});
 
 var guessPhrase; // Can I auto generate from an API? Or just pull from answers array
 var guessesLeft = 13;
@@ -7,11 +14,9 @@ var correctAnswer = []; // answer laid out as an array for internal reference
 var gameWorkSpace = []; // answer laid out as an array with hidden gaps
 var wrongGuesses = []; // repository of already guessed letters
 var answers = [
-  "this is a phrase",
-  "two ducks and a cheese",
   "test test test"
+  
 ]
-
 //// INQUIRER VARIABLES AND FUNCTIONS: ////
 var inquirerGameStart = {
   type: 'confirm',
@@ -31,10 +36,7 @@ function inquirerGameGuess() {
     if (!varifyThatGuessIsALetter(guess)) {
       console.log("That is not a letter.")
     }
-    else if (alreadyCorrect(guess)) {
-      console.log("that has already been guessed!");
-      inquirerGameGuess();
-    } else {
+    else {
       console.log("search for letter");
       let analyzeIndices = [];
       for (let i = 0; i < correctAnswer.length; i++) {
@@ -42,7 +44,7 @@ function inquirerGameGuess() {
           analyzeIndices.push(i);
         }
       };
-      console.log("ANALYZE ENTRY: " + analyzeIndices);
+      // console.log("ANALYZE ENTRY: " + analyzeIndices);
       if (analyzeIndices.length !== 0) {
         correctGuess(analyzeIndices, guess);
       } else {
@@ -50,7 +52,7 @@ function inquirerGameGuess() {
       }
     }
   }).then(function () {
-    console.log(arrayToString(correctAnswer));
+    // console.log(arrayToString(correctAnswer));
     gameOverState();
   });
 }
@@ -88,17 +90,17 @@ function alreadyCorrect(val) {
 };
 
 function alreadyWrong(val) {
-  return gameWorkSpace.includes(val);
+  return wrongGuesses.includes(val);
 };
 
 function correctGuess(indices, guess) {
   if (alreadyCorrect(guess)) {
-    Console.log("You already guessed that one!")
+    console.log("You already guessed that one!")
   } else {
     for (let i = 0; i < indices.length; i++) {
       gameWorkSpace[indices[i]] = guess;
     }
-    console.log("game work space: " + arrayToString(gameWorkSpace));
+    console.log(colors.correct(arrayToString(gameWorkSpace)));
   }
 };
 
@@ -108,17 +110,20 @@ function incorrectGuess(val) {
   } else {
     wrongGuesses.push(val);
     guessesLeft--;
-    console.log("Wrong guesses: " + wrongGuesses + "   |   only " + guessesLeft + " guesses left . . .");
+    console.log(colors.wrong("Wrong: " + wrongGuesses + "   |   only " + guessesLeft + " guesses left . . ."));
+    console.log(colors.correct(arrayToString(gameWorkSpace)));
   }
 }
 
 function gameOverState() {
   if (guessesLeft == 0) {
     // failState();
-    console.log("game lose");
+    console.log(colors.winner("game lose"));
+    gameReset();
   } else if (arrayToString(correctAnswer) == arrayToString(gameWorkSpace)) {
     // successState();
-    console.log("game win");
+    console.log(colors.rainbow("You guessed it!"));
+    gameReset();
   } else { inquirerGameGuess() }
 }
 //// END HELPER FUNCTIONS ////
@@ -142,6 +147,27 @@ function gameInitialization() { // inquirer function to begin the game
   })
 }
 
+function gameReset() { // inquirer function to begin the game
+  inquirer.prompt([
+    inquirerGameOver
+  ]).then(function (input) {
+    if (input.gameOver) {
+      // INITIALIZE THE GAME WITH NEW PHRASE, LOG THE SPACES TO THE SCREEN, PROMPT GUESS
+      var randomPick = answers[Math.floor(Math.random() * answers.length)];
+      wrongGuesses = [];
+      correctAnswer = [];
+      gameWorkSpace = [];
+      guessesLeft = 13;
+      stringToArrayAndSetGameArrays(randomPick);
+    } else {
+      console.log("Goodbye!");
+      process.exit();
+    }
+  }).then(function () {
+    inquirerGameGuess();
+  })
+}
+
 function guessPrompt() { // function to take another user guess
 
 }
@@ -151,3 +177,7 @@ function checkUserGuess() { // analyzes the user guess against answer and update
 }
 
 gameInitialization();
+
+/// FURTHER DEVELOPMENT GOALS:
+// ADD WHEEL OF FORTUNE API FOR GAME STRINGS
+// BREAK INTO MODULES
