@@ -1,6 +1,7 @@
 var inquirer = require('inquirer');
 var colors = require('colors/safe');
 
+
 colors.setTheme({
   warning: ['red', 'underline'],
   winner: ['cyan', 'bold'],
