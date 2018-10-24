@@ -1,5 +1,7 @@
 # Node-Word-Guessing-Game# Advanced JavaScript Assignment: Constructor Word Guess
 
+![screen recording 2018-10-24 at 2 47 36 pm](https://user-images.githubusercontent.com/17099707/47463835-3cd0ff80-d79c-11e8-820f-40c426aea13d.gif)
+
 ### Overview
 
 This project is a Word Guess command-line game using constructor functions.
