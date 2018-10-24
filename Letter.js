@@ -3,15 +3,16 @@ function Letter(alpha) {
   this.guessed = false;
   this.placeholder = function () {
     if (this.guessed) {
-      console.log("placeholder: " + this.alpha);
+      return this.alpha;
     } else {return "_"}
   }
   this.guessCheck = function (guess) {
     if (guess === this.alpha) {
       this.guessed = true;
-      console.log("guesscheck: " + this.guessed);
+      // console.log("guesscheck: " + this.guessed);
       this.placeholder();
-    } else {console.log("guesscheck: " + "no match")}
+    }
+    // else { console.log("guesscheck: " + this.guessed) }
   }
 }
 

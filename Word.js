@@ -13,16 +13,24 @@ function Word(string) {
     this.wordArray.forEach((letter) =>
       stringOutput += letter.placeholder()
     )
-    console.log("string output: " + stringOutput);
+    return stringOutput;
+  }
+  this.alphaCheck = function (alpha) {
+    this.wordArray.forEach((letter) => {
+      return letter.guessCheck(alpha);
+    })
+    this.wordArrayToString()
   }
 }
 
-var test = new Word("test");
+// var test = new Word("test");
 
-console.log(test.stringToArray);
-test.letterObjectArray();
-console.log(test.wordArray);
-test.wordArrayToString();
+// console.log(test.stringToArray);
+// test.letterObjectArray();
+// console.log(test.wordArray);
+// test.wordArrayToString();
+// test.alphaCheck("e");
+// console.log(test.wordArray);
 
 module.exports = Word;
 
