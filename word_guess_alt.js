@@ -18,6 +18,7 @@ var answers = [
   "SUPERCALIFRAGILISTICEXPILAIDOCIOUS"
 ]
 var wordObject = {};
+var spacer = "\n\n-----------------------\n\n";
 
 //// INQUIRER VARIABLES AND FUNCTIONS: ////
 var inquirerGameStart = {
@@ -42,7 +43,7 @@ function inquirerGameGuess() {  // UP TO DATE WITH CONSTRUCTOR MODULES
       if (wordObject.alphaCheck(guess)) {
         console.log(wordObject.alphaCheck(guess));
       } else {
-        console.log("Wrong guess. You have " + guessesLeft + " guesses remaining.");
+        console.log("You have " + guessesLeft + " guesses remaining." + spacer);
         guessesLeft -= 1;
       }
       
@@ -68,15 +69,15 @@ function varifyThatGuessIsALetter(val) { // CHECK THE USER INPUT FOR ALPHA ENTRY
 function gameOverState() {  // UP TO DATE WITH CONSTRUCTOR MODULES
   if (guessesLeft == 0) {
     // failState();
-    console.log(colors.winner(colors.wrong("Try again :(")));
+    console.log(colors.winner(colors.wrong("Try again :(" + spacer)));
     gameReset();
   } else if (!wordObject.wordArrayToString().includes("_")) {
     // successState();
-    console.log(colors.rainbow("You guessed it!"));
+    console.log(colors.rainbow("You guessed it!" + spacer));
     console.log(colors.correct(wordObject.wordArrayToString()))
     gameReset();
   } else {
-    console.log(colors.winner(wordObject.wordArrayToString()));
+    console.log(colors.winner(wordObject.wordArrayToString() + spacer));
     inquirerGameGuess()
   }
 }
