@@ -12,7 +12,7 @@ function Letter(alpha) {
       // console.log("guesscheck: " + this.guessed);
       this.placeholder();
     }
-    // else { console.log("guesscheck: " + this.guessed) }
+    else { return false }
   }
 }
 

@@ -12,7 +12,10 @@ colors.setTheme({
 
 var guessesLeft = 13;
 var answers = [
-  "TESTING"
+  "TESTING",
+  "THEATER",
+  "TITHING",
+  "SUPERCALIFRAGILISTICEXPILAIDOCIOUS"
 ]
 var wordObject = {};
 
@@ -36,8 +39,13 @@ function inquirerGameGuess() {  // UP TO DATE WITH CONSTRUCTOR MODULES
       console.log("That is not a letter.")
     }
     else {
-      console.log("search for letter");
-      console.log(wordObject.alphaCheck(guess));
+      if (wordObject.alphaCheck(guess)) {
+        console.log(wordObject.alphaCheck(guess));
+      } else {
+        console.log("Wrong guess. You have " + guessesLeft + " guesses remaining.");
+        guessesLeft -= 1;
+      }
+      
     }
   }).then(function () {
     // console.log(arrayToString(correctAnswer));
@@ -57,44 +65,15 @@ function varifyThatGuessIsALetter(val) { // CHECK THE USER INPUT FOR ALPHA ENTRY
   return (val.length === 1 && val.match(/[a-z]/i));
 };
 
-function alreadyCorrect(val) {
-  return gameWorkSpace.includes(val);
-};
-
-function alreadyWrong(val) {
-  return wrongGuesses.includes(val);
-};
-
-function correctGuess(indices, guess) {
-  if (alreadyCorrect(guess)) {
-    console.log("You already guessed that one!")
-  } else {
-    for (let i = 0; i < indices.length; i++) {
-      gameWorkSpace[indices[i]] = guess;
-    }
-    console.log(colors.correct(arrayToString(gameWorkSpace)));
-  }
-};
-
-function incorrectGuess(val) {
-  if (alreadyWrong(val)) {
-    console.log("That has already been guessed");
-  } else {
-    wrongGuesses.push(val);
-    guessesLeft--;
-    console.log(colors.wrong("Wrong: " + wrongGuesses + "   |   only " + guessesLeft + " guesses left . . ."));
-    console.log(colors.correct(arrayToString(gameWorkSpace)));
-  }
-}
-
 function gameOverState() {  // UP TO DATE WITH CONSTRUCTOR MODULES
   if (guessesLeft == 0) {
     // failState();
-    console.log(colors.winner("game lose"));
+    console.log(colors.winner(colors.wrong("Try again :(")));
     gameReset();
   } else if (!wordObject.wordArrayToString().includes("_")) {
     // successState();
     console.log(colors.rainbow("You guessed it!"));
+    console.log(colors.correct(wordObject.wordArrayToString()))
     gameReset();
   } else {
     console.log(colors.winner(wordObject.wordArrayToString()));

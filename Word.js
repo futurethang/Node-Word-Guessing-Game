@@ -17,7 +17,9 @@ function Word(string) {
   }
   this.alphaCheck = function (alpha) {
     this.wordArray.forEach((letter) => {
-      return letter.guessCheck(alpha);
+      if (letter.guessCheck(alpha)) {
+        return letter.guessCheck(alpha);
+      } else { return false }
     })
     this.wordArrayToString()
   }
