@@ -4,8 +4,6 @@
 
 This project is a Word Guess command-line game using constructor functions.
 
-## Instructions
-
 This game includes:
 
 1. Ability to receive user input using the `inquirer` npm package.
