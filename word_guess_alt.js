@@ -6,14 +6,11 @@ colors.setTheme({
   warning: ['red', 'underline'],
   winner: ['cyan', 'bold'],
   wrong: ['red', 'bold'],
-  correct: ['green', 'bold']
+  correct: ['green', 'bold'],
+  info: ['red', 'bgBlack']
 });
 
-var guessPhrase; // Can I auto generate from an API? Or just pull from answers array
 var guessesLeft = 13;
-var correctAnswer = []; // answer laid out as an array for internal reference
-var gameWorkSpace = []; // answer laid out as an array with hidden gaps
-var wrongGuesses = []; // repository of already guessed letters
 var answers = [
   "TESTING"
 ]
@@ -26,7 +23,7 @@ var inquirerGameStart = {
   name: 'gameStart'
 };
 
-function inquirerGameGuess() {
+function inquirerGameGuess() {  // UP TO DATE WITH CONSTRUCTOR MODULES
   inquirer.prompt([
     {
       type: 'input',
@@ -56,22 +53,6 @@ var inquirerGameOver = {
 //// END INQUIRER VARIABLES: ////
 
 //// HELPER FUNCTIONS ////
-function stringToArrayAndSetGameArrays(string) { // helper function, needs update to new variables
-  console.log("string to array before: " + string);
-  correctAnswer = string.toUpperCase().split("");
-  for (let i = 0; i < correctAnswer.length; i++) {
-    if (correctAnswer[i] !== " ") {
-      gameWorkSpace.push("_");
-    } else { gameWorkSpace.push(" "); }
-  };
-  console.log(correctAnswer);
-  console.log(arrayToString(gameWorkSpace));
-}
-
-function arrayToString(input) { // helper function
-  return input = input.join("");
-}
-
 function varifyThatGuessIsALetter(val) { // CHECK THE USER INPUT FOR ALPHA ENTRY, REJECT OTHER
   return (val.length === 1 && val.match(/[a-z]/i));
 };
@@ -106,7 +87,7 @@ function incorrectGuess(val) {
   }
 }
 
-function gameOverState() {
+function gameOverState() {  // UP TO DATE WITH CONSTRUCTOR MODULES
   if (guessesLeft == 0) {
     // failState();
     console.log(colors.winner("game lose"));
@@ -116,42 +97,39 @@ function gameOverState() {
     console.log(colors.rainbow("You guessed it!"));
     gameReset();
   } else {
-    console.log(wordObject.wordArrayToString());
+    console.log(colors.winner(wordObject.wordArrayToString()));
     inquirerGameGuess()
   }
 }
 //// END HELPER FUNCTIONS ////
 
+function gameSetup() {   // UP TO DATE WITH CONSTRUCTOR MODULES
+    var randomPick = answers[Math.floor(Math.random() * answers.length)];
+    guessesLeft = 13;
+    wordObject = new Word(randomPick);
+    wordObject.letterObjectArray();
+    console.log(colors.winner(wordObject.wordArrayToString()));
+    console.log(colors.info("[contains " + randomPick.length + " letters]"));
+}
 
-function gameInitialization() { // inquirer function to begin the game
+function gameInitialization() {   // UP TO DATE WITH CONSTRUCTOR MODULES
   inquirer.prompt([
     inquirerGameStart
   ]).then(function (input) {
     if (input.gameStart) {
-      // INITIALIZE THE GAME WITH NEW PHRASE, LOG THE SPACES TO THE SCREEN, PROMPT GUESS
-      var randomPick = answers[Math.floor(Math.random() * answers.length)];
-      guessesLeft = 13;
-      wordObject = new Word(randomPick);
-      wordObject.letterObjectArray();
-      console.log(wordObject.wordArray);
+      gameSetup();
     }
   }).then(function () {
     inquirerGameGuess();
   })
 }
 
-function gameReset() { // inquirer function to begin the game
+function gameReset() {   // UP TO DATE WITH CONSTRUCTOR MODULES
   inquirer.prompt([
     inquirerGameOver
   ]).then(function (input) {
     if (input.gameOver) {
-      // INITIALIZE THE GAME WITH NEW PHRASE, LOG THE SPACES TO THE SCREEN, PROMPT GUESS
-      var randomPick = answers[Math.floor(Math.random() * answers.length)];
-      wrongGuesses = [];
-      correctAnswer = [];
-      gameWorkSpace = [];
-      guessesLeft = 13;
-      stringToArrayAndSetGameArrays(randomPick);
+      gameSetup();
     } else {
       console.log("Goodbye!");
       process.exit();
@@ -161,16 +139,7 @@ function gameReset() { // inquirer function to begin the game
   })
 }
 
-function guessPrompt() { // function to take another user guess
-
-}
-
-function checkUserGuess() { // analyzes the user guess against answer and updates the display sting
-
-}
-
 gameInitialization();
 
 /// FURTHER DEVELOPMENT GOALS:
 // ADD WHEEL OF FORTUNE API FOR GAME STRINGS
-// BREAK INTO MODULES
